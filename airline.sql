@@ -19,12 +19,12 @@ primary key (id)
 
 -- ----------- FLIGHTS TABLE ----------
 create table flight(
+id INT NOT NULL AUTO_INCREMENT, 
 flight_number VARCHAR(255) not null,
 aircraft VARCHAR(255),
 flight_mileage INT not null,
 total_aircraft_seats INT NOT NULL ,
-primary key (flight_number)
-
+primary key (id)
 );
 
 
@@ -33,13 +33,11 @@ primary key (flight_number)
 create table booking(
 id INT NOT NULL AUTO_INCREMENT,
 customer_id INT not null,
-flight_number VARCHAR(255) not null,
+flight_id INT not null,
 primary key (id),
 foreign key (customer_id) references customer(id),
-foreign key (flight_number) references flight(flight_number)
-
+foreign key (flight_id) references flight(id)
 );
-
 
 
 
@@ -66,21 +64,22 @@ insert into flight(flight_number, aircraft, flight_mileage, total_aircraft_seats
 ('DL37', 'Boeing 747', 531, 400);
 
 
+
 -- ------------- INSERT INTO CUSTOMERS_FLIGHTS TABLE -----------
-insert into booking(customer_id, flight_number)values
-(1, 'DL143'),
-(1, 'DL122'),
-(2, 'DL122'),
-(3, 'DL122'),
-(3, 'DL53'),
-(3, 'DL222'),
-(4, 'DL143'),
-(4, 'DL37'),
-(5, 'DL143'),
-(5, 'DL122'),
-(6, 'DL222'),
-(7, 'DL222'),
-(8, 'DL222');
+insert into booking(customer_id, flight_id)values
+(1, 1),
+(1, 2),
+(2, 2),
+(3, 2),
+(3, 3),
+(3, 4),
+(4, 1),
+(4, 5),
+(5, 1),
+(5, 2),
+(6, 4),
+(7, 4),
+(8, 4);
 
 
 
@@ -124,7 +123,7 @@ WHERE flight_mileage BETWEEN 300 AND 2000;
 SELECT customer_status, AVG(flight_mileage) AS average_flight_distance
 FROM booking
 INNER JOIN customer ON booking.customer_id = customer_id
-INNER JOIN flight ON booking.flight_number = flight.flight_number
+INNER JOIN flight ON booking.flight_id = flight_id
 GROUP BY customer_status;
 
 
@@ -132,9 +131,17 @@ GROUP BY customer_status;
 SELECT f.aircraft, COUNT(*) as booking_count
 FROM booking b
 INNER JOIN customer c ON b.customer_id = c.id
-INNER JOIN flight f ON b.flight_number = f.flight_number
+INNER JOIN flight f ON b.flight_id = flight_id
 WHERE c.customer_status = 'Gold'
 GROUP BY f.aircraft
 ORDER BY booking_count DESC
 LIMIT 1;
-    
+
+
+
+
+
+
+
+
+
